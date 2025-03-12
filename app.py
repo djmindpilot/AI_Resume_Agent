@@ -1,7 +1,7 @@
 import streamlit as st
 import re
 import openai
-import PyPDF2
+import pypdf2
 import os
 from openai import OpenAI
 
@@ -10,7 +10,7 @@ client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 # Function to Extract Text from PDF
 def extract_text_from_pdf(uploaded_file):
-    reader = PyPDF2.PdfReader(uploaded_file)
+    reader = pypdf2.PdfReader(uploaded_file)
     text = ""
     for page in reader.pages:
         text += page.extract_text() if page.extract_text() else ""
