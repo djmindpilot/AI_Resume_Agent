@@ -1,9 +1,18 @@
 import streamlit as st
 import re
 import openai
+import PyPDF2
 
 # OpenAI API Key Setup
 openai.api_key = "YOUR_OPENAI_API_KEY"
+
+# Function to Extract Text from PDF
+def extract_text_from_pdf(uploaded_file):
+    reader = PyPDF2.PdfReader(uploaded_file)
+    text = ""
+    for page in reader.pages:
+        text += page.extract_text() if page.extract_text() else ""
+    return text
 
 # JD Parsing Logic
 def extract_key_points(jd_text):
@@ -67,12 +76,16 @@ def generate_skills_gap_analysis(parsed_data, user_skills):
 # Streamlit UI Design
 st.title("AI Resume Assistant")
 
-jd_text = st.text_area("Paste the Job Description Here:")
-experience_summary = st.text_area("Describe Your Experience Summary:")
+# PDF Upload Inputs
+jd_file = st.file_uploader("Upload JD PDF Here", type="pdf")
+exp_file = st.file_uploader("Upload Experience Summary PDF Here", type="pdf")
 user_skills = st.text_input("List Your Current Skills (comma separated)").split(", ")
 
 if st.button("Generate Insights"):
-    if jd_text and experience_summary:
+    if jd_file and exp_file:
+        jd_text = extract_text_from_pdf(jd_file)
+        experience_summary = extract_text_from_pdf(exp_file)
+        
         jd_parsed = extract_key_points(jd_text)
         resume_points = generate_resume_points(jd_parsed, experience_summary)
         cover_letter = generate_cover_letter(jd_parsed, experience_summary)
@@ -90,4 +103,4 @@ if st.button("Generate Insights"):
         st.subheader("Skills Gap Analysis")
         st.write(skills_gap)
     else:
-        st.warning("Please provide both the Job Description and Experience Summary.")
+        st.warning("Please upload both the Job Description and Experience Summary PDFs.")
