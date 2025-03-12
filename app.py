@@ -42,11 +42,14 @@ def generate_resume_points(parsed_data, experience_summary):
         f" Include industry-relevant language that resonates with decision-makers in mid-senior management roles."
     )
 
-    response = openai.Completion.create(
-        engine="text-davinci-003",
-        prompt=prompt,
-        max_tokens=300
-    )
+response = openai.ChatCompletion.create(
+    model="gpt-4",
+    messages=[
+        {"role": "system", "content": "You are a professional resume expert."},
+        {"role": "user", "content": prompt}
+    ],
+    max_tokens=300
+)
 
     return response['choices'][0]['text'].strip()
 
