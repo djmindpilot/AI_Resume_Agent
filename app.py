@@ -34,7 +34,7 @@ def generate_resume_points(parsed_data, experience_summary):
         f" Include industry-relevant language that resonates with decision-makers in mid-senior management roles."
     )
 
-    response = client.chat.completions.create(
+    response = openai.ChatCompletion.create(
         model="gpt-4",
         messages=[
             {"role": "system", "content": "You are a professional resume expert."},
@@ -53,7 +53,7 @@ def generate_cover_letter(parsed_data, experience_summary):
         f" Emphasize leadership, business strategy, and measurable outcomes for a mid-senior management role."
     )
 
-    response = client.chat.completions.create(
+    response = openai.ChatCompletion.create(
         model="gpt-4",
         messages=[
             {"role": "system", "content": "You are a professional resume expert."},
