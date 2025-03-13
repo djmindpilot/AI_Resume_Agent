@@ -4,7 +4,7 @@ import openai
 import os
 
 # OpenAI API Key Setup
-client = openai.Client(api_key=os.getenv("OPENAI_API_KEY"))
+openai.api_key = os.getenv("OPENAI_API_KEY")
 
 # JD Parsing Logic
 def extract_key_points(jd_text):
