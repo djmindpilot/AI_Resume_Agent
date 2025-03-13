@@ -43,7 +43,7 @@ def generate_resume_points(parsed_data, experience_summary):
         max_tokens=300
     )
 
-    return response.choices[0].message.content.strip()
+    return response.choices[0].message['content'].strip()
 
 # GPT Prompt for Cover Letter Generation
 def generate_cover_letter(parsed_data, experience_summary):
@@ -62,7 +62,7 @@ def generate_cover_letter(parsed_data, experience_summary):
         max_tokens=300
     )
 
-    return response.choices[0].message.content.strip()
+    return response.choices[0].message['content'].strip()
 
 # GPT Prompt for Skills Gap Analysis
 def generate_skills_gap_analysis(parsed_data, user_skills):
