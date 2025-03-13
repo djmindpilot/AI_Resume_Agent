@@ -4,7 +4,7 @@ import openai
 import os
 
 # OpenAI API Key Setup
-openai.api_key = "YOUR_OPENAI_API_KEY"
+client = openai.Client(api_key=os.getenv("OPENAI_API_KEY"))
 
 # JD Parsing Logic
 def extract_key_points(jd_text):
@@ -34,18 +34,16 @@ def generate_resume_points(parsed_data, experience_summary):
         f" Include industry-relevant language that resonates with decision-makers in mid-senior management roles."
     )
 
-client = openai.Client(api_key=os.getenv("OPENAI_API_KEY"))
+    response = client.chat.completions.create(
+        model="gpt-4",
+        messages=[
+            {"role": "system", "content": "You are a professional resume expert."},
+            {"role": "user", "content": prompt}
+        ],
+        max_tokens=300
+    )
 
-response = client.chat.completions.create(
-    model="gpt-4",
-    messages=[
-        {"role": "system", "content": "You are a professional resume expert."},
-        {"role": "user", "content": prompt}
-    ],
-    max_tokens=300
-)
-
-    return response['choices'][0]['message']['content'].strip()
+    return response.choices[0].message.content.strip()
 
 # GPT Prompt for Cover Letter Generation
 def generate_cover_letter(parsed_data, experience_summary):
@@ -55,7 +53,7 @@ def generate_cover_letter(parsed_data, experience_summary):
         f" Emphasize leadership, business strategy, and measurable outcomes for a mid-senior management role."
     )
 
-    response = openai.ChatCompletion.create(
+    response = client.chat.completions.create(
         model="gpt-4",
         messages=[
             {"role": "system", "content": "You are a professional resume expert."},
@@ -64,7 +62,7 @@ def generate_cover_letter(parsed_data, experience_summary):
         max_tokens=300
     )
 
-    return response['choices'][0]['message']['content'].strip()
+    return response.choices[0].message.content.strip()
 
 # GPT Prompt for Skills Gap Analysis
 def generate_skills_gap_analysis(parsed_data, user_skills):
