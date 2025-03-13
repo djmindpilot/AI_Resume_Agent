@@ -35,7 +35,7 @@ def generate_resume_points(parsed_data, experience_summary):
     )
 
     response = openai.chat.completions.create(
-        model="gpt-4o",
+        model="gpt-3.5-turbo",
         messages=[
             {"role": "system", "content": "You are a professional resume expert."},
             {"role": "user", "content": prompt}
@@ -54,7 +54,7 @@ def generate_cover_letter(parsed_data, experience_summary):
     )
 
     response = openai.chat.completions.create(
-        model="gpt-4o",
+        model="gpt-3.5-turbo",
         messages=[
             {"role": "system", "content": "You are a professional resume expert."},
             {"role": "user", "content": prompt}
