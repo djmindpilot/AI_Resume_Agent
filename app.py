@@ -1,6 +1,7 @@
 import streamlit as st
 import re
 import openai
+import os
 
 # OpenAI API Key Setup
 openai.api_key = "YOUR_OPENAI_API_KEY"
@@ -33,14 +34,16 @@ def generate_resume_points(parsed_data, experience_summary):
         f" Include industry-relevant language that resonates with decision-makers in mid-senior management roles."
     )
 
-    response = openai.ChatCompletion.create(
-        model="gpt-4",
-        messages=[
-            {"role": "system", "content": "You are a professional resume expert."},
-            {"role": "user", "content": prompt}
-        ],
-        max_tokens=300
-    )
+client = openai.Client(api_key=os.getenv("OPENAI_API_KEY"))
+
+response = client.chat.completions.create(
+    model="gpt-4",
+    messages=[
+        {"role": "system", "content": "You are a professional resume expert."},
+        {"role": "user", "content": prompt}
+    ],
+    max_tokens=300
+)
 
     return response['choices'][0]['message']['content'].strip()
 
