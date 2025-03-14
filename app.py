@@ -1,10 +1,10 @@
 import streamlit as st
 import re
-import openai
+from transformers import pipeline
 import os
 
-# OpenAI API Key Setup
-openai.api_key = os.getenv("OPENAI_API_KEY")
+# Load Hugging Face Model
+generator = pipeline("text-generation", model="mistralai/Mistral-7B-Instruct-v0.2")
 
 # JD Parsing Logic
 def extract_key_points(jd_text):
@@ -24,7 +24,7 @@ def extract_key_points(jd_text):
 
     return parsed_data
 
-# GPT Prompt for Resume Point Generation
+# Hugging Face Prompt for Resume Point Generation
 def generate_resume_points(parsed_data, experience_summary):
     prompt = (
         f"Based on my experience: {experience_summary}\n\n"
@@ -34,18 +34,10 @@ def generate_resume_points(parsed_data, experience_summary):
         f" Include industry-relevant language that resonates with decision-makers in mid-senior management roles."
     )
 
-    response = openai.chat.completions.create(
-        model="gpt-3.5-turbo",
-        messages=[
-            {"role": "system", "content": "You are a professional resume expert."},
-            {"role": "user", "content": prompt}
-        ],
-        max_tokens=300
-    )
+    response = generator(prompt, max_length=300, do_sample=True)
+    return response[0]['generated_text'].strip()
 
-    return response.choices[0].message.content.strip()
-
-# GPT Prompt for Cover Letter Generation
+# Hugging Face Prompt for Cover Letter Generation
 def generate_cover_letter(parsed_data, experience_summary):
     prompt = (
         f"Based on my experience: {experience_summary}\n\n"
@@ -53,16 +45,8 @@ def generate_cover_letter(parsed_data, experience_summary):
         f" Emphasize leadership, business strategy, and measurable outcomes for a mid-senior management role."
     )
 
-    response = openai.chat.completions.create(
-        model="gpt-3.5-turbo",
-        messages=[
-            {"role": "system", "content": "You are a professional resume expert."},
-            {"role": "user", "content": prompt}
-        ],
-        max_tokens=300
-    )
-
-    return response.choices[0].message.content.strip()
+    response = generator(prompt, max_length=300, do_sample=True)
+    return response[0]['generated_text'].strip()
 
 # GPT Prompt for Skills Gap Analysis
 def generate_skills_gap_analysis(parsed_data, user_skills):
@@ -72,7 +56,7 @@ def generate_skills_gap_analysis(parsed_data, user_skills):
     return "You match the required skills well."
 
 # Streamlit UI Design
-st.title("AI Resume Assistant")
+st.title("AI Resume Assistant (Hugging Face)")
 
 jd_text = st.text_area("Paste the Job Description Here:")
 experience_summary = st.text_area("Describe Your Experience Summary:")
@@ -93,6 +77,12 @@ if st.button("Generate Insights"):
 
         st.subheader("Generated Cover Letter")
         st.write(cover_letter)
+
+        st.subheader("Skills Gap Analysis")
+        st.write(skills_gap)
+    else:
+        st.warning("Please provide both the Job Description and Experience Summary.")
+
 
         st.subheader("Skills Gap Analysis")
         st.write(skills_gap)
