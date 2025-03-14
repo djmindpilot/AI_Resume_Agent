@@ -82,9 +82,3 @@ if st.button("Generate Insights"):
         st.write(skills_gap)
     else:
         st.warning("Please provide both the Job Description and Experience Summary.")
-
-
-        st.subheader("Skills Gap Analysis")
-        st.write(skills_gap)
-    else:
-        st.warning("Please provide both the Job Description and Experience Summary.")
