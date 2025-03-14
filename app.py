@@ -3,8 +3,8 @@ import re
 from transformers import pipeline
 import os
 
-# Load Hugging Face Model
-generator = pipeline("text-generation", model="mistralai/Mistral-7B-Instruct-v0.2")
+# Load Hugging Face Model (Free and Open)
+generator = pipeline("text-generation", model="tiiuae/falcon-7b-instruct")
 
 # JD Parsing Logic
 def extract_key_points(jd_text):
